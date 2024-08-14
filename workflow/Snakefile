@@ -1,0 +1,150 @@
+#/project/gbru_wheat2/fhb/conda/assemblyqc_env
+
+ASSEMBLIES = config['ASSEMBLIES']
+VECSCREEN_DB = config['VECSCREEN_DB']
+VRN_DB = config['VRN_DB']
+PPD_DB = config['PPD_DB']
+
+rule all:
+	input:
+		expand("results/VecScreen/{assembly}.vecscreen.outfmt6.txt", assembly = ASSEMBLIES), 
+		expand("results/VecScreen/{assembly}.vecscreen.hitcounts.txt", assembly = ASSEMBLIES), 
+		expand("results/VrnBlast/{assembly}.vrnblast.outfmt6.txt", assembly = ASSEMBLIES),
+		expand("results/PpdBlast/{assembly}.ppdblast.outfmt6.txt", assembly = ASSEMBLIES), 
+		expand("results/busco/contigs/{assembly}/short_summary.specific.poales_odb10.contigs{ext}", assembly = ASSEMBLIES, ext=[".json", ".txt"]), 
+		expand("results/busco/chrs/{assembly}/short_summary.specific.poales_odb10.chrs{ext}", assembly = ASSEMBLIES, ext=[".json", ".txt"]), 
+		expand("results/assembly_stats/{assembly}.contigs.stats", assembly = ASSEMBLIES), 
+		expand("results/assembly_stats/{assembly}.chrs.stats", assembly = ASSEMBLIES)
+
+rule vecscreen:
+	input:
+		assembly = "resources/assemblies/{assembly}.fasta", 
+		db = VECSCREEN_DB
+	output:
+		"results/VecScreen/{assembly}.vecscreen.outfmt6.txt"
+	params:
+		options = 
+			"-task blastn " 
+			"-reward 1 "
+			"-penalty -5 "
+			"-gapopen 3 "
+			"-gapextend 3 "
+			"-dust yes "
+			"-soft_masking true "
+			"-evalue 700 "
+			"-searchsp 1750000000000 "
+			"-outfmt 6", 
+		pbadapter = "gnl|uv|NGB00972.1:1-45", 
+		pbprimer = "gnl|uv|NGB00973.1:1-35"
+	log:
+		"logs/vecscreen.{assembly}.log"
+	threads: 12
+	shell:
+		"makeblastdb -in {input.db} -dbtype nucl &> {log} ; "
+		"blastn -query {input.assembly} -db {input.db} -num_threads {threads} {params.options} > {output} 2>> {log}" #vecscreen blast
+
+rule summarize_vecscreen:
+	input:
+		"results/VecScreen/{assembly}.vecscreen.outfmt6.txt"
+	output:
+		hitcount = "results/VecScreen/{assembly}.vecscreen.hitcounts.txt", 
+		adaptercount = "results/VecScreen/{assembly}.pbadapter.hitcounts.txt", 
+		primercount = "results/VecScreen/{assembly}.pbprimer.hitcounts.txt"
+	params:
+		pbadapter = "gnl|uv|NGB00972.1:1-45", 
+		pbprimer = "gnl|uv|NGB00973.1:1-35"
+	log:
+		"logs/vecscreen.{assembly}.log"
+	threads: 12
+	shell:
+		"grep '{params.pbadapter}' {input} > {output.adaptercount} 2>> {log} ; " # subset PacBio adapter hits
+		"grep '{params.pbprimer}' {input} > {output.primercount} 2>> {log} ; " # subset PacBio primer hits
+		"wc -l {input} > {output.hitcount} 2>> {log} ; " #count all vecscreen hits
+		"wc -l {output.adaptercount} >> {output.hitcount} 2>> {log} ; " #count PacBio adapter hits
+		"wc -l {output.primercount} >> {output.hitcount} 2>> {log} " #count PacBio primer hits
+
+rule vrn_blast:
+	input:
+		assembly = "resources/assemblies/{assembly}.fasta", 
+		db = VRN_DB
+	output:
+		blast = "results/VrnBlast/{assembly}.vrnblast.outfmt6.txt", 
+		genelist = "results/VrnBlast/{assembly}.vrnblast.genelist.txt"
+	log:
+		"logs/vrn_blast.{assembly}.log"
+	threads: 12
+	shell:
+		"makeblastdb -in {input.db} -dbtype nucl &> {log} ; "
+		"blastn -query {input.assembly} -db {input.db} -num_threads {threads} -outfmt 6 "
+		"| sort -nr -k12 > {output.blast} 2>> {log} ; "
+		"seqkit fx2tab --length --name --header-line  {input.db} > {output.genelist} 2>> {log}"
+
+rule ppd_blast:
+	input:
+		assembly = "resources/assemblies/{assembly}.fasta", 
+		db = PPD_DB
+	output:
+		blast = "results/PpdBlast/{assembly}.ppdblast.outfmt6.txt", 
+		genelist = "results/PpdBlast/{assembly}.ppdblast.genelist.txt"
+	log:
+		"logs/ppd_blast.{assembly}.log"
+	threads: 12
+	shell:
+		"makeblastdb -in {input.db} -dbtype nucl &> {log} ; "
+		"blastn -query {input.assembly} -db {input.db} -num_threads {threads} -outfmt 6 "
+		"| sort -nr -k12 > {output.blast} 2>> {log} ; "
+		"grep '^>' {input.db} > {output.genelist} 2>> {log}"
+
+rule busco_contigs:
+	input:
+		"resources/assemblies/{assembly}.fasta"
+	output:
+		expand("results/busco/contigs/{{assembly}}/short_summary.specific.poales_odb10.contigs{ext}", ext=[".json", ".txt"])
+	params:
+		db = "poales_odb10", 
+		outdir = "Busco", 
+		target = "contigs"
+	threads: 12
+	shell:
+		"busco -i {input} -c {threads} -l {params.db} -f -m genome "
+		"--out_path {params.outdir} -o {params.target}"
+
+rule subset_chrs:
+	input:
+		"resources/assemblies/{assembly}.fasta"
+	output:
+		"results/assembly_chrs/{assembly}.chrs.fasta"
+	log:
+		"logs/subset_chrs.log"
+	shell:
+		"seqkit grep -rp 'ptg' -v {input} > {output} 2> {log}"
+
+rule busco_chrs:
+	input:
+		"results/assembly_chrs/{assembly}.chrs.fasta"
+	output:
+		expand("results/busco/chrs/{{assembly}}/short_summary.specific.poales_odb10.chrs{ext}", ext=[".json", ".txt"])
+	threads: 12
+	params:
+		db = "poales_odb10", 
+		outdir = "Busco", 
+		target = "chrs"
+	shell:
+		"busco -i {input} -c {threads} -l {params.db} -f -m genome "
+		"--out_path {params.outdir} -o {params.target}"
+
+rule bbstats_contigs:
+	input:
+		"resources/assemblies/{assembly}.fasta"
+	output:
+		"results/assembly_stats/{assembly}.contigs.stats"
+	shell:
+		"stats.sh -Xmx800g in={input} out={output}"
+
+rule bbstats_chrs:
+	input:
+		"results/assembly_chrs/{assembly}.chrs.fasta"
+	output:
+		"results/assembly_stats/{assembly}.chrs.stats"
+	shell:
+		"stats.sh -Xmx800g in={input} out={output}"
