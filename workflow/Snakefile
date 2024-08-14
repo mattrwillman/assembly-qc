@@ -11,8 +11,8 @@ rule all:
 		expand("results/VecScreen/{assembly}.vecscreen.hitcounts.txt", assembly = ASSEMBLIES), 
 		expand("results/VrnBlast/{assembly}.vrnblast.outfmt6.txt", assembly = ASSEMBLIES),
 		expand("results/PpdBlast/{assembly}.ppdblast.outfmt6.txt", assembly = ASSEMBLIES), 
-		expand("results/busco/contigs/{assembly}/short_summary.specific.poales_odb10.contigs{ext}", assembly = ASSEMBLIES, ext=[".json", ".txt"]), 
-		expand("results/busco/chrs/{assembly}/short_summary.specific.poales_odb10.chrs{ext}", assembly = ASSEMBLIES, ext=[".json", ".txt"]), 
+#		expand("results/busco/contigs/{assembly}/short_summary.specific.poales_odb10.contigs{ext}", assembly = ASSEMBLIES, ext=[".json", ".txt"]), 
+#		expand("results/busco/chrs/{assembly}/short_summary.specific.poales_odb10.chrs{ext}", assembly = ASSEMBLIES, ext=[".json", ".txt"]), 
 		expand("results/assembly_stats/{assembly}.contigs.stats", assembly = ASSEMBLIES), 
 		expand("results/assembly_stats/{assembly}.chrs.stats", assembly = ASSEMBLIES)
 
