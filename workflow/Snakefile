@@ -11,8 +11,8 @@ rule all:
 		expand("results/VecScreen/{assembly}.vecscreen.hitcounts.txt", assembly = ASSEMBLIES), 
 		expand("results/VrnBlast/{assembly}.vrnblast.outfmt6.txt", assembly = ASSEMBLIES),
 		expand("results/PpdBlast/{assembly}.ppdblast.outfmt6.txt", assembly = ASSEMBLIES), 
-#		expand("results/busco/contigs/{assembly}/short_summary.specific.poales_odb10.contigs{ext}", assembly = ASSEMBLIES, ext=[".json", ".txt"]), 
-#		expand("results/busco/chrs/{assembly}/short_summary.specific.poales_odb10.chrs{ext}", assembly = ASSEMBLIES, ext=[".json", ".txt"]), 
+		expand("results/busco/contigs/{assembly}/short_summary.specific.poales_odb10.contigs{ext}", assembly = ASSEMBLIES, ext=[".json", ".txt"]), 
+		expand("results/busco/chrs/{assembly}/short_summary.specific.poales_odb10.chrs{ext}", assembly = ASSEMBLIES, ext=[".json", ".txt"]), 
 		expand("results/assembly_stats/{assembly}.contigs.stats", assembly = ASSEMBLIES), 
 		expand("results/assembly_stats/{assembly}.chrs.stats", assembly = ASSEMBLIES)
 
@@ -117,8 +117,8 @@ rule busco_contigs:
 		expand("results/busco/contigs/{{assembly}}/short_summary.specific.poales_odb10.contigs{ext}", ext=[".json", ".txt"])
 	params:
 		db = "poales_odb10", 
-		outdir = "Busco", 
-		target = "contigs"
+		outdir = "results/busco/contigs", 
+		target = "{assembly}"
 	threads: 12
 	shell:
 		"busco -i {input} -c {threads} -l {params.db} -f -m genome "
@@ -142,8 +142,8 @@ rule busco_chrs:
 	threads: 12
 	params:
 		db = "poales_odb10", 
-		outdir = "Busco", 
-		target = "chrs"
+		outdir = "results/busco/chrs", 
+		target = "{assembly}"
 	shell:
 		"busco -i {input} -c {threads} -l {params.db} -f -m genome "
 		"--out_path {params.outdir} -o {params.target}"
