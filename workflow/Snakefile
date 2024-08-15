@@ -16,13 +16,31 @@ rule all:
 		expand("results/assembly_stats/{assembly}.contigs.stats", assembly = ASSEMBLIES), 
 		expand("results/assembly_stats/{assembly}.chrs.stats", assembly = ASSEMBLIES)
 
+rule makeblastdb:
+	input:
+		fasta = "resources/assemblies/{assembly}.fasta"
+	output:
+		"results/dbs/{assembly}.fasta.ndb"
+	params:
+		dbname = "results/dbs/{assembly}.fasta"
+	log:
+		"logs/makeblastdb/{assembly}.log"
+	shell:
+		"makeblastdb "
+		"-in {input.fasta} "
+		"-dbtype nucl "
+		"-logfile {log} "
+		"-out {params.dbname} "
+		"&> {log}"
+
 rule vecscreen:
 	input:
-		assembly = "resources/assemblies/{assembly}.fasta", 
-		db = VECSCREEN_DB
+		query = VECSCREEN_DB, 
+		db = "results/dbs/{assembly}.fasta.ndb"
 	output:
 		"results/VecScreen/{assembly}.vecscreen.outfmt6.txt"
 	params:
+		db = "results/dbs/{assembly}.fasta", 
 		options = 
 			"-task blastn " 
 			"-reward 1 "
@@ -40,16 +58,15 @@ rule vecscreen:
 		"logs/vecscreen.{assembly}.log"
 	threads: 12
 	shell:
-		"makeblastdb -in {input.db} -dbtype nucl &> {log} ; "
-		"blastn -query {input.assembly} -db {input.db} -num_threads {threads} {params.options} > {output} 2>> {log}" #vecscreen blast
+		"blastn -query {input.query} -db {params.db} -num_threads {threads} {params.options} > {output} 2>> {log}"
 
 rule summarize_vecscreen:
 	input:
 		"results/VecScreen/{assembly}.vecscreen.outfmt6.txt"
 	output:
 		hitcount = "results/VecScreen/{assembly}.vecscreen.hitcounts.txt", 
-		adaptercount = "results/VecScreen/{assembly}.pbadapter.hitcounts.txt", 
-		primercount = "results/VecScreen/{assembly}.pbprimer.hitcounts.txt"
+		adapter = "results/VecScreen/{assembly}.pbadapter.txt", 
+		primer = "results/VecScreen/{assembly}.pbprimer.txt"
 	params:
 		pbadapter = "gnl|uv|NGB00972.1:1-45", 
 		pbprimer = "gnl|uv|NGB00973.1:1-35"
@@ -57,43 +74,41 @@ rule summarize_vecscreen:
 		"logs/vecscreen.{assembly}.log"
 	threads: 12
 	shell:
-		"grep '{params.pbadapter}' {input} > {output.adaptercount} 2>> {log} ; " # subset PacBio adapter hits
-		"grep '{params.pbprimer}' {input} > {output.primercount} 2>> {log} ; " # subset PacBio primer hits
+		"grep '{params.pbadapter}' {input} > {output.adapter} 2>> {log} ; " # subset PacBio adapter hits
+		"grep '{params.pbprimer}' {input} > {output.primer} 2>> {log} ; " # subset PacBio primer hits
 		"wc -l {input} > {output.hitcount} 2>> {log} ; " #count all vecscreen hits
-		"wc -l {output.adaptercount} >> {output.hitcount} 2>> {log} ; " #count PacBio adapter hits
-		"wc -l {output.primercount} >> {output.hitcount} 2>> {log} " #count PacBio primer hits
+		"wc -l {output.adapter} >> {output.hitcount} 2>> {log} ; " #count PacBio adapter hits
+		"wc -l {output.primer} >> {output.hitcount} 2>> {log} " #count PacBio primer hits
 
 rule vrn_blast:
 	input:
-		assembly = "resources/assemblies/{assembly}.fasta", 
-		db = VRN_DB
+		query = VRN_DB, 
+		db = "results/dbs/{assembly}.fasta.ndb"
 	output:
-		blast = "results/VrnBlast/{assembly}.vrnblast.outfmt6.txt", 
-		genelist = "results/VrnBlast/{assembly}.vrnblast.genelist.txt"
+		"results/VrnBlast/{assembly}.vrnblast.outfmt6.txt"
+	params:
+		db = "results/dbs/{assembly}.fasta"
 	log:
 		"logs/vrn_blast.{assembly}.log"
 	threads: 12
 	shell:
-		"makeblastdb -in {input.db} -dbtype nucl &> {log} ; "
-		"blastn -query {input.assembly} -db {input.db} -num_threads {threads} -outfmt 6 "
-		"| sort -nr -k12 > {output.blast} 2>> {log} ; "
-		"seqkit fx2tab --length --name --header-line  {input.db} > {output.genelist} 2>> {log}"
+		"blastn -query {input.query} -db {params.db} -num_threads {threads} -outfmt 6 "
+		"| sort -nr -k12 > {output} 2> {log}"
 
 rule ppd_blast:
 	input:
-		assembly = "resources/assemblies/{assembly}.fasta", 
-		db = PPD_DB
+		query = PPD_DB, 
+		db = "results/dbs/{assembly}.fasta.ndb"
 	output:
-		blast = "results/PpdBlast/{assembly}.ppdblast.outfmt6.txt", 
-		genelist = "results/PpdBlast/{assembly}.ppdblast.genelist.txt"
+		"results/PpdBlast/{assembly}.ppdblast.outfmt6.txt"
+	params:
+		db = "results/dbs/{assembly}.fasta"
 	log:
 		"logs/ppd_blast.{assembly}.log"
 	threads: 12
 	shell:
-		"makeblastdb -in {input.db} -dbtype nucl &> {log} ; "
-		"blastn -query {input.assembly} -db {input.db} -num_threads {threads} -outfmt 6 "
-		"| sort -nr -k12 > {output.blast} 2>> {log} ; "
-		"grep '^>' {input.db} > {output.genelist} 2>> {log}"
+		"blastn -query {input.query} -db {params.db} -num_threads {threads} -outfmt 6 "
+		"| sort -nr -k12 > {output} 2> {log}"
 
 rule busco_contigs:
 	input:
@@ -115,7 +130,7 @@ rule subset_chrs:
 	output:
 		"results/assembly_chrs/{assembly}.chrs.fasta"
 	log:
-		"logs/subset_chrs.log"
+		"logs/subset_chrs/{assembly}.log"
 	shell:
 		"seqkit grep -rp 'ptg' -v {input} > {output} 2> {log}"
 
