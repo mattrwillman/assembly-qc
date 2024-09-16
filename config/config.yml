@@ -5,9 +5,17 @@ ASSEMBLIES:
   - "Hilliard.MW.scaffold"
   - "Triticum_aestivum_AGS2000"
   - "Triticum_aestivum_Hilliard"
+  - "Triticum_aestivum_jagger.PGSBv2.1.dna.toplevel"
+  - "Attraktion.rename"
+  - "Triticum_aestivum_Hilliard_NCBI_Dec2023"
+  - "Triticum_aestivum_AGS2000_NCBI_Dec2023"
 
 VECSCREEN_DB: "resources/dbs/UniVec"
 
-VRN_DB: "resources/dbs/TripleDirkC_vrn_genes.fa"
+VRN1_DB: "resources/dbs/TripleDirkC_vrn_genes.fa"
+
+VRN2_DB: "resources/dbs/Taes_VRN2.fa"
+
+RHT8_DB: "resources/dbs/Taes_Rht8.fa"
 
 PPD_DB: "resources/dbs/Taes_Ppd_genes.fa"
