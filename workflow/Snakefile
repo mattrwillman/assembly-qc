@@ -187,13 +187,17 @@ rule bbstats_contigs:
 		"resources/assemblies/{assembly}.fasta"
 	output:
 		"results/assembly_stats/{assembly}.contigs.stats"
+	resources:
+		mem_mb=190000
 	shell:
-		"stats.sh -Xmx800g in={input} out={output}"
+		"stats.sh -Xmx190g in={input} out={output}"
 
 rule bbstats_chrs:
 	input:
 		"results/assembly_chrs/{assembly}.chrs.fasta"
 	output:
 		"results/assembly_stats/{assembly}.chrs.stats"
+	resources:
+		mem_mb=190000
 	shell:
-		"stats.sh -Xmx800g in={input} out={output}"
+		"stats.sh -Xmx190g in={input} out={output}"
