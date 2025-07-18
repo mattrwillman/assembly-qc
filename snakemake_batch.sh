@@ -15,6 +15,6 @@
 
 module load miniconda3
 
-source activate /project/gbru_wheat2/fhb/conda/assemblyqc_env
+source activate /project/gbru_wheat2/conda/assemblyqc_env
 
 snakemake --cores 'all' --configfile config/config.yml
