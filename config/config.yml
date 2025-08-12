@@ -1,6 +1,10 @@
 ASSEMBLIES: 
-  - "Taes_Hilliard_1.1"
+  - "Taes_Hilliard_1.2"
   - "Taes_AGS2000_1.1"
+  - "IL0218228.ragtag.scaffold"
+  - "LA03136E71.ragtag.scaffold"
+  - "MO080104.ragtag.scaffold"
+  - "Jagger.ragtag.scaffold"
 
 VECSCREEN_DB: "resources/dbs/UniVec"
 
