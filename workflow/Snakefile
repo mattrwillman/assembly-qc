@@ -153,7 +153,7 @@ rule busco_contigs:
 		db = "poales_odb10", 
 		outdir = "results/busco/contigs", 
 		target = "{assembly}"
-	threads: 12
+	threads: 24
 	shell:
 		"busco -i {input} -c {threads} -l {params.db} -f -m genome "
 		"--out_path {params.outdir} -o {params.target}"
@@ -173,7 +173,7 @@ rule busco_chrs:
 		"results/assembly_chrs/{assembly}.chrs.fasta"
 	output:
 		expand("results/busco/chrs/{{assembly}}/short_summary.specific.poales_odb10.{{assembly}}{ext}", ext=[".json", ".txt"])
-	threads: 12
+	threads: 24
 	params:
 		db = "poales_odb10", 
 		outdir = "results/busco/chrs", 
