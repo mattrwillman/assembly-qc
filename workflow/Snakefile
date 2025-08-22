@@ -117,7 +117,7 @@ rule vrn2_blast:
 
 rule vrn3_blast:
     input:
-        query = VRN2_DB, 
+        query = config['VRN3_DB'], 
         db = "results/dbs/{assembly}.fasta.ndb"
     output:
         "results/Vrn3Blast/{assembly}.vrn3blast.outfmt6.txt"

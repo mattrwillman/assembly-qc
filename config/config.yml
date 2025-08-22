@@ -12,6 +12,8 @@ VRN1_DB: "resources/dbs/TripleDirkC_vrn_genes.fa"
 
 VRN2_DB: "resources/dbs/Taes_VRN2.fa"
 
+VRN3_DB: "resources/dbs/Taes_VRN3.fa"
+
 RHT8_DB: "resources/dbs/Taes_Rht8.fa"
 
 PPD_DB: "resources/dbs/Taes_Ppd_genes.fa"
