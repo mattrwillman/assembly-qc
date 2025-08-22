@@ -18,7 +18,8 @@ rule all:
 		expand("results/busco/contigs/{assembly}/short_summary.specific.poales_odb10.{assembly}{ext}", assembly = ASSEMBLIES, ext=[".json", ".txt"]), 
 		expand("results/busco/chrs/{assembly}/short_summary.specific.poales_odb10.{assembly}{ext}", assembly = ASSEMBLIES, ext=[".json", ".txt"]), 
 		expand("results/assembly_stats/{assembly}.contigs.stats", assembly = ASSEMBLIES), 
-		expand("results/assembly_stats/{assembly}.chrs.stats", assembly = ASSEMBLIES)
+		expand("results/assembly_stats/{assembly}.chrs.stats", assembly = ASSEMBLIES), 
+		expand("results/Vrn3Blast/{assembly}.vrn3blast.outfmt6.txt", assembly = ASSEMBLIES)
 		
 rule makeblastdb:
 	input:
@@ -109,6 +110,21 @@ rule vrn2_blast:
         db = "results/dbs/{assembly}.fasta"
     log:
         "logs/vrn2_blast.{assembly}.log"
+    threads: 12
+    shell:
+        "blastn -query {input.query} -db {params.db} -num_threads {threads} -outfmt 6 "
+        "| sort -nr -k12 > {output} 2> {log}"
+
+rule vrn3_blast:
+    input:
+        query = VRN2_DB, 
+        db = "results/dbs/{assembly}.fasta.ndb"
+    output:
+        "results/Vrn3Blast/{assembly}.vrn3blast.outfmt6.txt"
+    params:
+        db = "results/dbs/{assembly}.fasta"
+    log:
+        "logs/vrn3_blast.{assembly}.log"
     threads: 12
     shell:
         "blastn -query {input.query} -db {params.db} -num_threads {threads} -outfmt 6 "
