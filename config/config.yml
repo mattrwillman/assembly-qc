@@ -1,10 +1,27 @@
-ASSEMBLIES: 
-  - "Taes_Hilliard_1.2"
-  - "Taes_AGS2000_1.1"
-  - "IL0218228.ragtag.scaffold"
-  - "LA03136E71.ragtag.scaffold"
-  - "MO080104.ragtag.scaffold"
-  - "Jagger.ragtag.scaffold"
+ASSEMBLY_DICT: {
+    "Jagger" : "/project/gbru_wheat2/ref/Parva/jagger_final_pseudomolecules_MW.fa", 
+    "Hilliard" : "/project/gbru_wheat2/ref/NCBI_MWillman/Taes_Hilliard_1.2.fasta", 
+    "MO080104" : "/project/gbru_wheat2/ref/MWillman/MO080104.ragtag.scaffold.fa", 
+    "IL0218228" : "/project/gbru_wheat2/ref/MWillman/IL0218228.ragtag.scaffold.fa", 
+    "LA03136E71" : "/project/gbru_wheat2/ref/MWillman/LA03136E71.ragtag.scaffold.fa", 
+    "MD315" : "/project/gbru_wheat2/ref/Parva/MD315_final_pseudomolecules_MW.fa", 
+    "AGS2000" : "/project/gbru_wheat2/ref/NCBI_MWillman/Taes_AGS2000_1.1.fasta", 
+    "Jagger_MW" : "/project/gbru_wheat2/ref/MWillman/Jagger.ragtag.scaffold.fa", 
+    "Hilliard_Raz" : "/project/gbru_wheat2/ref/Raz_assemblies/ftp.ipk-gatersleben.de/Gina/250925_Hilliard_pseudomolecules_v1+unanchored_contigs_filtered_chloroplast.fasta", 
+    "AGS2000_Raz" : "/project/gbru_wheat2/ref/Raz_assemblies/ftp.ipk-gatersleben.de/Gina/220725_AGS2000_pseudomolecules_v1+unanchored_contigs_filtered_chloroplast.fasta"
+    }
+
+ASSEMBLIES:
+  - Jagger
+  - Hilliard
+  - MO080104
+  - IL0218228
+  - LA03136E71
+  - MD315
+  - AGS2000
+  - Jagger_MW
+  - Hilliard_Raz
+  - AGS2000_Raz
 
 VECSCREEN_DB: "resources/dbs/UniVec"
 
@@ -17,4 +34,3 @@ VRN3_DB: "resources/dbs/Taes_VRN3.fa"
 RHT8_DB: "resources/dbs/Taes_Rht8.fa"
 
 PPD_DB: "resources/dbs/Taes_Ppd_genes.fa"
-
