@@ -1,27 +1,21 @@
 ASSEMBLY_DICT: {
-    "Jagger" : "/project/gbru_wheat2/ref/Parva/jagger_final_pseudomolecules_MW.fa", 
-    "Hilliard" : "/project/gbru_wheat2/ref/NCBI_MWillman/Taes_Hilliard_1.2.fasta", 
-    "MO080104" : "/project/gbru_wheat2/ref/MWillman/MO080104.ragtag.scaffold.fa", 
-    "IL0218228" : "/project/gbru_wheat2/ref/MWillman/IL0218228.ragtag.scaffold.fa", 
-    "LA03136E71" : "/project/gbru_wheat2/ref/MWillman/LA03136E71.ragtag.scaffold.fa", 
-    "MD315" : "/project/gbru_wheat2/ref/Parva/MD315_final_pseudomolecules_MW.fa", 
-    "AGS2000" : "/project/gbru_wheat2/ref/NCBI_MWillman/Taes_AGS2000_1.1.fasta", 
-    "Jagger_MW" : "/project/gbru_wheat2/ref/MWillman/Jagger.ragtag.scaffold.fa", 
-    "Hilliard_Raz" : "/project/gbru_wheat2/ref/Raz_assemblies/ftp.ipk-gatersleben.de/Gina/250925_Hilliard_pseudomolecules_v1+unanchored_contigs_filtered_chloroplast.fasta", 
-    "AGS2000_Raz" : "/project/gbru_wheat2/ref/Raz_assemblies/ftp.ipk-gatersleben.de/Gina/220725_AGS2000_pseudomolecules_v1+unanchored_contigs_filtered_chloroplast.fasta"
+    "Hilliard" : "../Gathered/International/250925_Hilliard_pseudomolecules_v1+unanchored_contigs_filtered_chloroplast.fasta", 
+    "AGS2000" : "../Gathered/International/220725_AGS2000_pseudomolecules_v1+unanchored_contigs_filtered_chloroplast.fasta", 
+    "MD315" :  "../Gathered/Parva/MD315_final_pseudomolecules.fa", 
+    "Clark" : "../Gathered/US_PHG/Clark_pseudomolecules_v1.0.fa", 
+    "MO080104" : "../Made/MO080104/results/MO080104.ragtag.scaffold.fa", 
+    "IL02-18228" : "../Made/IL02-18228/results/IL02-18228.ragtag.scaffold.fa", 
+    "LA03136E71" : "../Made/LA03136E71/results/LA03136E71.ragtag.scaffold.fa", 
     }
 
 ASSEMBLIES:
-  - Jagger
   - Hilliard
-  - MO080104
-  - IL0218228
-  - LA03136E71
-  - MD315
   - AGS2000
-  - Jagger_MW
-  - Hilliard_Raz
-  - AGS2000_Raz
+  - MD315
+  - Clark
+  - MO080104
+  - IL02-18228
+  - LA03136E71
 
 VECSCREEN_DB: "resources/dbs/UniVec"
 
@@ -34,3 +28,4 @@ VRN3_DB: "resources/dbs/Taes_VRN3.fa"
 RHT8_DB: "resources/dbs/Taes_Rht8.fa"
 
 PPD_DB: "resources/dbs/Taes_Ppd_genes.fa"
+
