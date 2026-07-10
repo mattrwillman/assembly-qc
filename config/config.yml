@@ -1,31 +1,24 @@
 ASSEMBLY_DICT: {
-    "Hilliard" : "../Gathered/International/250925_Hilliard_pseudomolecules_v1+unanchored_contigs_filtered_chloroplast.fasta", 
-    "AGS2000" : "../Gathered/International/220725_AGS2000_pseudomolecules_v1+unanchored_contigs_filtered_chloroplast.fasta", 
-    "MD315" :  "../Gathered/Parva/MD315_final_pseudomolecules.fa", 
-    "Clark" : "../Gathered/US_PHG/Clark_pseudomolecules_v1.0.fa", 
-    "MO080104" : "../Made/MO080104/results/MO080104.ragtag.scaffold.fa", 
-    "IL02-18228" : "../Made/IL02-18228/results/IL02-18228.ragtag.scaffold.fa", 
-    "LA03136E71" : "../Made/LA03136E71/results/LA03136E71.ragtag.scaffold.fa", 
+    "Hilliard" : "/project/gbru_wheat2/ref/Raz_assemblies/Hilliard_shortContigName.fasta",
+    "AGS2000" : "/project/gbru_wheat2/ref/Raz_assemblies/AGS2000_shortContigName.fasta",
+    "MD315" : "/project/gbru_wheat2/Parva/Gathered/Parva/MD315_final_pseudomolecules.fa",
+    "Clark" : "/project/gbru_wheat2/Clark/Clark_pseudomolecules_v1.0.fa",
+    "MO080104" : "/90daydata/gbru_wheat2/Pangenome_pub/wheat-assembly-hifi-hic/results/MO080104_l3_f38.ragtag.scaffold.fa",
+    "IL02-18228" : "/90daydata/gbru_wheat2/Pangenome_pub/wheat-assembly-hifi-hic/results/IL02-18228_l3_f38.ragtag.scaffold.fa",
+    "LA03136E71" : "/90daydata/gbru_wheat2/Pangenome_pub/wheat-assembly-hifi-hic/results/LA03136E71_l3_f38.ragtag.scaffold.fa",
+    "GA06493-13LE6" : "/90daydata/gbru_wheat2/Pangenome_pub/wheat-assembly-hifi-hic/results/GA06493-13LE6_l3_f38.ragtag.scaffold.fa",
+    "ChineseSpring" : "/project/gbru_wheat2/ref/Refseq2.1_IWGSC/assembly/ChineseSpringV2.fasta",
     }
-
-ASSEMBLIES:
-  - Hilliard
-  - AGS2000
-  - MD315
-  - Clark
-  - MO080104
-  - IL02-18228
-  - LA03136E71
 
 VECSCREEN_DB: "resources/dbs/UniVec"
 
-VRN1_DB: "resources/dbs/TripleDirkC_vrn_genes.fa"
-
-VRN2_DB: "resources/dbs/Taes_VRN2.fa"
-
-VRN3_DB: "resources/dbs/Taes_VRN3.fa"
-
-RHT8_DB: "resources/dbs/Taes_Rht8.fa"
-
-PPD_DB: "resources/dbs/Taes_Ppd_genes.fa"
-
+# BLAST query fasta for each gene target. Adding an entry here is enough to
+# run it through the pipeline -- no Snakefile changes needed.
+BLAST_DBS: {
+    "Vrn1" : "resources/dbs/TripleDirkC_vrn_genes.fa",
+    "Vrn2" : "resources/dbs/Taes_VRN2.fa",
+    "Vrn3" : "resources/dbs/Taes_VRN3.fa",
+    "Rht8" : "resources/dbs/Taes_Rht8.fa",
+    "Ppd" : "resources/dbs/Taes_Ppd_genes.fa",
+    "Lr9" : "resources/dbs/Lr9_CDS_genomic_sequence.fasta",
+    }
