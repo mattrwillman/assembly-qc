@@ -1,5 +1,7 @@
 #/project/gbru_wheat2/fhb/conda/assemblyqc_env
 
+configfile: "config/config.yml"
+
 ASSEMBLY_DICT = config['ASSEMBLY_DICT']
 ASSEMBLIES = list(ASSEMBLY_DICT.keys())
 VECSCREEN_DB = config['VECSCREEN_DB']
